@@ -34,7 +34,7 @@ class BaseModel:
         dict:devuelve un diccionario con los atributos de instancia.
         """
         ttributes = self.__dict__.copy()
-        attributes['__class__'] = self.__class__.__name__
-        attributes['created_at'] = self.created_at.isoformat()
-        attributes['updated_at'] = self.updated_at.isoformat()
+        attributes["__class__"] = self.__class__.__name__
+        attributes["created_at"] = self.created_at.isoformat()
+        attributes["updated_at"] = self.updated_at.isoformat()
         return attributes
