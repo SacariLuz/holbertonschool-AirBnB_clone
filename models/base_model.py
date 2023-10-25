@@ -9,34 +9,31 @@ import datetime
 class BaseModel:
 
     """Esta clase represent BaseModel"""
-
     def __init__(self):
-        """
-        Este medoto inicialize:
-            id, created_at, update_at
-        """
-
+        """metodo que inicialize"""
         self.id = str(uuid.uuid4())
-        self.created_at = datetime.datetime.now().isoformat()
-        self.updated_at = self.created_at
+        self.created_at = datetime.now()
+        self.updated_at = datetime.now()
 
     def __str__(self):
         """
-        Este metodo regresa a una representacion de nuestra instancia
-        Return:
-            str: Representa instancia
+        devuelve una representacion de nuestra instancia
         """
-        return f"[BaseModel] ({self.id}) {self.__dict__}"
+        return ("[{}] ({}) {}"
+                .format(self.__class__.__name__, self.id, self.__dict__))
 
     def save(self):
-        """Este metodo actualiza la fecha de creación updated_at."""
-        self.updated_at = datetime.datetime.now().isoformat()
+        """metodo que actualiza la fecha de creación updated_at."""
+        self.updated_at = datetime.now()
 
     def to_dict(self):
         """
-        Este metodo regresa un diccionado
+        metodo que devuelve un diccionario
         Returns:
-            dict:devuelve un diccionario con los atributos de instancia.
+        dict:devuelve un diccionario con los atributos de instancia.
         """
-        self.__dict__["__class__"] = "BaseModel"
-        return self.__dict__
+        obj_dict = self.__dict__.copy()
+        obj_dict['__class__'] = self.__class__.__name__
+        obj_dict['created_at'] = self.created_at.isoformat()
+        obj_dict['updated_at'] = self.updated_at.isoformat()
+        return obj_dict
