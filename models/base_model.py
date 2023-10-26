@@ -27,7 +27,7 @@ class BaseModel:
 
     def save(self):
         """metodo que actualiza la fecha de creación updated_at."""
-        self.updated_at = datetime.datetime.now()
+        self.updated_at = datetime.now()
 
     def to_dict(self):
         """
