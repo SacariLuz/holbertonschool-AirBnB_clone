@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 """
-Este módulo define la clase BaseModel
+Este modulo define la clase BaseModel
 """
 
 import uuid
@@ -9,12 +9,12 @@ import models
 
 class BaseModel():
     """
-    Esta es la clase que heredarán las demas clases
+    Esta clase hereda
     """
 
     def __init__(self):
         """
-        Este método inicializa los atributos:
+        Metodo que inicialize los atributos:
             id, created_at, updated_at
         """
 
@@ -24,7 +24,7 @@ class BaseModel():
 
     def __str__(self):
         """
-        Este metodo retorna una representación de nuestra instancia
+        Retorna una representación de la instancia
         """
 
         return "[{}] ({}) {}".format(self.__class__.__name__, 
@@ -32,14 +32,14 @@ class BaseModel():
 
     def save(self):
         """
-        Este método actualiza la fecha de creación updated_at.
+        Metodo que actualiza fecha de creación updated_at.
         """
 
         self.updated_at = datetime.now()
 
     def to_dict(self):
         """
-        Este método retorna un diccionario con los atributos de instancia.
+        Metodo que devuelve un diccionario con los atributos de instancia.
         """
 
         my_dict = dict(self.__dict__)
