@@ -3,7 +3,9 @@
 
 
 import uuid
+from detetime
 import datetime
+import models
 
 
 class BaseModel:
@@ -20,7 +22,8 @@ class BaseModel:
         """
         devuelve una representacion de nuestra instancia
         """
-        return f"[BaseModel] ({self.id}) {self.__dict__}"
+        return "[{}] ({}) {}".format(self.__class__.__name__,
+                                     self.id, self.__dict__)
 
     def save(self):
         """metodo que actualiza la fecha de creación updated_at."""
@@ -33,8 +36,9 @@ class BaseModel:
         Returns:
         dict:devuelve un diccionario con los atributos de instancia.
         """
-        ttributes = self.__dict__.copy()
-        attributes["__class__"] = self.__class__.__name__
-        attributes["created_at"] = self.created_at.isoformat()
-        attributes["updated_at"] = self.updated_at.isoformat()
-        return attributes
+
+        my_dict = dict(self.__dict__)
+        my_dict['created_at'] = self.__dict__['created_at'].isoformat()
+        my_dict['updated_at'] = self.__dict__['updated_at'].isoformat()
+        my_dict['__class__'] = self.__class__.__name__
+        return (my_dict)
