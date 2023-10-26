@@ -1,4 +1,4 @@
-#!/usr/rin/python3
+#!/usr/bin/python3
 """Este modulo define la clase BaseModel"""
 
 
