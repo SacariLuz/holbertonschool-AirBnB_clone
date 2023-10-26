@@ -3,12 +3,11 @@
 
 
 import uuid
-from detetime
-import datetime
+from detetime import datetime
 import models
 
 
-class BaseModel:
+class BaseModel():
 
     """Esta clase represent BaseModel"""
 
@@ -22,11 +21,13 @@ class BaseModel:
         """
         devuelve una representacion de nuestra instancia
         """
+
         return "[{}] ({}) {}".format(self.__class__.__name__,
-                                     self.id, self.__dict__)
+                self.id, self.__dict__)
 
     def save(self):
         """metodo que actualiza la fecha de creación updated_at."""
+
         self.updated_at = datetime.now()
 
     def to_dict(self):
