@@ -12,7 +12,7 @@ class BaseModel():
     Esta clase hereda
     """
 
-    def __init__(self):
+    def __init__(self, *args, **kwargs):
         """
         Metodo que inicialize los atributos:
             id, created_at, updated_at
