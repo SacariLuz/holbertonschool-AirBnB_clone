@@ -5,7 +5,6 @@ Este modulo define la clase BaseModel
 
 import uuid
 from datetime import datetime
-import models
 
 
 class BaseModel():
@@ -17,18 +16,18 @@ class BaseModel():
         """
         Metodo que inicialize los atributos:
             id, created_at, updated_at
-            kwargs: recibe diccionario
+            **kwargs: recibe diccionario
         """
         if kwargs:
             for k, v in kwargs.items():
                 if k != "__class__":
                     setattr(self, k, v)
 
-                    self.__dict__["created_at"] = datetime.strptime(
-                        self.__dict__["created_at"], "%Y-%m-%dT%H:%M:%S.%f")
+            self.__dict__["created_at"] = datetime.strptime(
+                self.__dict__["created_at"], "%Y-%m-%dT%H:%M:%S.%f")
 
-                    self.__dict__["updated_at"] = datetime.strptime(
-                        self.__dict__["updated_at"], "%Y-%m-%dT%H:%M:%S.%f")
+            self.__dict__["updated_at"] = datetime.strptime(
+                self.__dict__["updated_at"], "%Y-%m-%dT%H:%M:%S.%f")
 
         else:
             self.id = str(uuid.uuid4())
@@ -47,7 +46,6 @@ class BaseModel():
         """
         Metodo que actualiza fecha de creación updated_at.
         """
-
         self.updated_at = datetime.now()
 
     def to_dict(self):
