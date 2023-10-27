@@ -6,7 +6,6 @@ Esto es un test para la clase BaseModel
 import unittest
 
 from models.base_model import BaseModel
-
 import time
 
 class TestBaseModel(unittest.TestCase):
@@ -14,10 +13,17 @@ class TestBaseModel(unittest.TestCase):
     Define casos de prueba
     """
 
+    def setUp(self):
+        """
+        instancia de la clase BaseModel
+        """
+        self.bm = BaseModel()
+
     def test_init(self):
         """
         Se realiza prueba que compara los atributos con los tipos de datos
         """
+        self.assertIsInstance(self.bm.id, str)
 
     def test_return(self):
         """
