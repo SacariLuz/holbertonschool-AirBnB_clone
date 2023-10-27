@@ -1,14 +1,57 @@
 #!/usr/bin/python3
+"""
+Esto es un test para la clase BaseModel
+"""
+
+import unittest
+
 from models.base_model import BaseModel
 
-my_model = BaseModel()
-my_model.name = "My First Model"
-my_model.my_number = 89
-print(my_model)
-my_model.save()
-print(my_model)
-my_model_json = my_model.to_dict()
-print(my_model_json)
-print("JSON of my_model:")
-for key in my_model_json.keys():
-    print("\t{}: ({}) - {}".format(key, type(my_model_json[key]), my_model_json[key]))
+import time
+
+class TestBaseModel(unittest.TestCase):
+    """
+    Define casos de prueba
+    """
+
+    def test_init(self):
+        """
+        Se realiza prueba que compara los atributos con los tipos de datos
+        """
+
+    def test_return(self):
+        """
+        Esto compara lo que devuelve como None de save()
+        """
+
+    def test_compare_attrs(self):
+        """
+        Verifica que contenga los atributtos
+        """
+        model_dict = self.bm.to_dict()
+        self.assertIn('id', model_dict)
+        self.assertIn('created_at', model_dict)
+        self.assertIn('updated_at', model_dict)
+        self.assertIn('__class__', model_dict)
+
+    def test_methods_magic_str(self):
+        """
+        Esto compara la salida de magic __str__
+        """
+        bm = BaseModel()
+        expected_output = "[{}] ({}) {}".format(
+                bm.__class__.__name__, bm.id, bm.__dict__)
+        self.assertEqual(str(bm), expected_output)
+
+    def test_update_date(self):
+        """
+        Actualiza el atributo updated_at
+        """
+        model = BaseModel()
+        original_updated_at = model.updated_at
+        time.sleep(1)
+        model.save()
+        self.assertNotEqual(original_updated_at, model.updated_at)
+
+    if __name__ == "__main__":
+        unittest.main()
