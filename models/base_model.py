@@ -19,7 +19,7 @@ class BaseModel():
             id, created_at, updated_at
             **kwargs: recibe diccionario
         """
-        if kwargs:
+        if bool(kwargs):
             for k, v in kwargs.items():
                 if k != "__class__":
                     setattr(self, k, v)
@@ -41,8 +41,8 @@ class BaseModel():
         Retorna una representación de la instancia
         """
 
-        return "[{}] ({}) {}".format(self.__class__.__name__,
-                                     self.id, self.__dict__)
+        return f"[{self.__class__.__name__}] ({self.id}) "\
+            + str({k: v for k, v in self.__dict__.items() if k != '__class__'})
 
     def save(self):
         """
@@ -53,11 +53,11 @@ class BaseModel():
 
     def to_dict(self):
         """
-        Metodo que devuelve un diccionario con los atributos de instancia.
+        Metodo que devuelve un nuevo diccionario con los atributos de instancia.
         """
 
-        my_dict = dict(self.__dict__)
-        my_dict['created_at'] = self.__dict__['created_at'].isoformat()
-        my_dict['updated_at'] = self.__dict__['updated_at'].isoformat()
-        my_dict['__class__'] = self.__class__.__name__
-        return (my_dict)
+        new_dict = self.__dict__.copy()
+        new_dict['created_at'] = new_dict['created_at'].isoformat()
+        new_dict['updated_at'] = new_dict['updated_at'].isoformat()
+        new_dict['__class__'] = self.__class__.__name__
+        return new_dict
