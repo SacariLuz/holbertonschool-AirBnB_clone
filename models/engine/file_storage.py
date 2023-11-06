@@ -14,25 +14,24 @@ class FileStorage:
     def all(self):
         """Devuelve contenido a __objects
         cuando se llama a una instancia de la clase"""
-        return self.__objects
+        return FileStorage.__objects
 
     def new(self, obj):
         """Este metodo toma obj como argumento y construye __objects
         diccionario usando el nombre de la clase y el id"""
-        key = "{}.{}".format(type(obj).__name__, obj.id)
-        self.__objects[key] = obj
+        key = f"{obj.__class__.__name__}.{obj.id}"
+        FileStorage.__objects[key] = obj
 
     def save(self):
-        """El metodo guarda archivo __file_path
-        y json.dumps lo utiliza para escribir un diccionario a __objects
+        """El metodo guarda archivo un diccionario a __objects
         en el archivo en formato json
         """
-        data = {}
+         new_dict = {}
 
-        odict = self.__objects
-        data = {obj: odict[obj].to_dict() for obj in odict.keys()}
-        with open(self.__file_path, "w", encoding="utf-8") as f:
-            json.dump(data, f)
+        for k, obj in FileStorage.__objects.items():
+            new_dict[k] = obj.to_dict()
+        with open(FileStorage.__file_path, 'w', encoding='utf-8') as f:
+            json.dump(new_dict, f)
 
     def reload(self):
         """
@@ -62,10 +61,10 @@ class FileStorage:
                     "updated_at": datetime.datetime},
             "User":
                 {"email": str,
-                    "password": str,
-                    "first_name": str,
-                    "last_name": str},
-                }
+                 "password": str,
+                 "first_name": str,
+                 "last_name": str},
+                },
 
         }
 
