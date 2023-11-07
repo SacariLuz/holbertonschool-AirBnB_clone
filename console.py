@@ -6,6 +6,11 @@ from shlex import split
 from models import storage
 from models.base_model import BaseModel
 from models.user import User
+from models.state import State
+from models.city import City
+from models.place import Place
+from models.amenity import Amenity
+from models.review import Review
 
 
 def parse(arg):
@@ -25,29 +30,33 @@ def parse(arg):
         retl.append(curly_braces.group())
         return ret1
 
-class HBNBCommand(cmd.Cmd):
-    """Una clase que hereda HBNBCommand cmd.Cmd"""
-    prompt = "(hbnb)"
-    """prompt que muestre (hbnb)"""
-    prompt = "(hbnb) "
 
+class HBNBCommand(cmd.Cmd):
+    """Clase que hereda HBNBCommand cmd.Cmd"""
+    prompt = "(hbnb)"
+    """prompt personalizado que muestra (hbnb)"""
     __classes = {
-        "BaseModel",
-        "User",
-        "State",
-        "City",
-        "Place",
-        "Amenity",
-        "Review"
+            "BaseModel",
+            "User",
+            "State",
+            "City",
+            "Place",
+            "Amenity",
+            "Review"
     }
 
-  def default(self, arg):
-        """Sintaxis por defecto del modulo cmd si la entrada no es valida"""
+    def emptyline(self):
+        """No haga nada al recibir una linea vacia"""
+        pass
+
+    def default(self, arg):
+        """Sintaxis por defecto del modulo cmd si la entrada
+        no es valida"""
         argdict = {
-            "all": self.do_all,
-            "show": self.do_show,
-            "destroy": self.do_destroy,
-            "update": self.do_update
+                "all": self.do_all,
+                "show": self.do_show,
+                "destroy": self.do_destroy,
+                "update": self.do_update
         }
         match = re.search(r"\.", arg)
         if match is not None:
@@ -62,20 +71,30 @@ class HBNBCommand(cmd.Cmd):
         return False
 
     def do_quit(self, arg):
-        """Quit command to exit the program\n"""
+        """Definimos un metodo do_quit y toma 2
+        argumentos y salir del interprete de comandos
+        """
         return True
 
     def do_EOF(self, arg):
-        """EOF signal to exit the program"""
+        """
+        Definimos un metodo do_EOE y toma 2 argumentos
+        señal EOF para salir del programa
+        """
         print("")
         return True
 
-    def emptyline(self):
-        pass
+    def help_quit(self):
+        """Salir del interpete de comandos"""
+        print("Quit command to exit the program")
+
+    def help_EOF(self):
+        """Muestra la ayuda para el comando EOF"""
+        print("Salir del programa con EOF")
 
     def do_create(self, arg):
-        """Uso: create <class>
-        Crea una nueva instancia y muestra el id.
+        """Crea una nueva instancia de clase e imprime
+        el id
         """
         argl = parse(arg)
         if len(argl) == 0:
@@ -87,8 +106,10 @@ class HBNBCommand(cmd.Cmd):
             storage.save()
 
     def do_show(self, arg):
-        """Usando: show <class> <id> or <class>.show(<id>)
-        Muestra la representación en string de la clase con su id
+        """
+        Mostrar el id o la clase.show
+        Muestra la representacion de una cadena instancia
+        de clase y una identifiacion determinada
         """
         argl = parse(arg)
         objdict = storage.all()
@@ -104,13 +125,14 @@ class HBNBCommand(cmd.Cmd):
             print(objdict["{}.{}".format(argl[0], argl[1])])
 
     def do_destroy(self, arg):
-        """Usage: destroy <class> <id> or <class>.destroy(<id>)
-        Delete a class instance of a given id."""
+        """Elimina una instancia de clase de una identificacion
+        determinada
+        """
         argl = parse(arg)
         objdict = storage.all()
         if len(argl) == 0:
             print("** class name missing **")
-        elif not argl[0] in HBNBCommand.__classes:
+        elif argl[0] not in HBNBCommand.__classes:
             print("** class doesn't exist **")
         elif len(argl) == 1:
             print("** instance id missing **")
@@ -121,9 +143,10 @@ class HBNBCommand(cmd.Cmd):
             storage.save()
 
     def do_all(self, arg):
-        """Usage: all or all <class> or <class>.all()
-        Display string representations of all instances of a given class.
-        If no class is specified, displays all instantiated objects."""
+        """Muestra las representaciones de cadenas de todas las
+        instancias de una clase determinada. Si no se especifica
+        ninguna clase, muestra todos los objetos instanciados.
+        """
         argl = parse(arg)
         if len(argl) > 0 and argl[0] not in HBNBCommand.__classes:
             print("** class doesn't exist **")
@@ -136,13 +159,20 @@ class HBNBCommand(cmd.Cmd):
                     objl.append(obj.__str__())
             print(objl)
 
+    def do_count(self, arg):
+        """Recuperar el nro de instancias de una clase determinada"""
+        argl = parse(arg)
+        count = 0
+        for obj in storage.all().values():
+            if argl[0] == obj.__class__.__name__:
+                count += 1
+        print(count)
+
     def do_update(self, arg):
-        """Usando: update <class> <id> <attribute_name> <attribute_value> or
-       <class>.update(<id>, <attribute_name>, <attribute_value>) o
-       <class>.update(<id>, <dictionary>)
-        Actualiza la instancia de la clase de la id señalada añadiendo o
-        actualizando un determinado
-        par clave/valor de atributo o diccionario."""
+        """Se actualiza una instancia de clase de una identificación
+        determinada agregando o actualizando un diccionario o
+        par clave/valor de atributo determinado
+        """
         argl = parse(arg)
         objdict = storage.all()
 
@@ -187,5 +217,5 @@ class HBNBCommand(cmd.Cmd):
         storage.save()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     HBNBCommand().cmdloop()
