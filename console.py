@@ -8,6 +8,10 @@ class HBNBCommand(cmd.Cmd):
 
     prompt = "(hbnb)"
 
+    def emptyline(self):
+        """No haga nada al recibir una linea vacia"""
+        pass
+
     def do_quit(self, arg):
         """Definimos un metodo do_quit y toma 2
         argumentos y salir del interprete de comandos
