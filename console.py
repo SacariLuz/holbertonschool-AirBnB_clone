@@ -4,7 +4,8 @@ Este módulo expone la clase
 HBNBCommand(cmd.Cmd)
 """
 import cmd
-from shlex import
+import re
+from shlex import split
 from models import storage
 from models.base_model import BaseModel
 
@@ -40,6 +41,29 @@ class HBNBCommand(cmd.Cmd):
     """
     prompt = "(hbnb) "
 
+    __classes = {
+        "BaseModel",
+        }
+
+    def default(self, arg):
+        """Sintaxis por defecto del modulo cmd si la entrada no es valida"""
+        argdict = {
+            "all": self.do_all,
+            "show": self.do_show,
+            "destroy": self.do_destroy,
+            "update": self.do_update
+        }
+        match = re.search(r"\.", arg)
+        if match is not None:
+            argl = [arg[:match.span()[0]], arg[match.span()[1]:]]
+            match = re.search(r"\((.*?)\)", argl[1])
+            if match is not None:
+                command = [argl[1][:match.span()[0]], match.group()[1:-1]]
+                if command[0] in argdict.keys():
+                    call = "{} {}".format(argl[0], command[1])
+                    return argdict[command[0]](call)
+        print("*** Unknown syntax: {}".format(arg))
+        return False
 
     def do_quit(self, arg):
         """Quit command to exit the program\n"""
@@ -104,7 +128,7 @@ class HBNBCommand(cmd.Cmd):
         """Usage: all or all <class> or <class>.all()
         Display string representations of all instances of a given class.
         If no class is specified, displays all instantiated objects."""
-        argl = parse(arg)
+        arg1 = parse(arg)
         if len(argl) > 0 and argl[0] not in HBNBCommand.__classes:
             print("** class doesn't exist **")
         else:
@@ -120,9 +144,8 @@ class HBNBCommand(cmd.Cmd):
         """Usando: update <class> <id> <attribute_name> <attribute_value> or
        <class>.update(<id>, <attribute_name>, <attribute_value>) o
        <class>.update(<id>, <dictionary>)
-        Actualiza la instancia de la clase de la id señalada añadiendo o
-        actualizando un determinado
-        par clave/valor de atributo o diccionario."""
+        Actualizar instancia de la clase de id, añadiendo o
+        actualizando valor de atributo o diccionario."""
         argl = parse(arg)
         objdict = storage.all()
 
@@ -167,5 +190,5 @@ class HBNBCommand(cmd.Cmd):
         storage.save()
 
 
-if __name__ == '__main__':
-    HBNBCo5mmand().cmdloop()
+    if __name__ == '__main__':
+        HBNBCommand().cmdloop()
