@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 """
-Este módulo define la clase FileStorage.
+Define la clase FileStorage.
 """
 import json
 from os import path
@@ -49,11 +49,11 @@ class FileStorage:
 
     def reload(self):
         """
-        Este método lee un archivo en formato .json, que se guardo
-        previamente con el método .save(), el diccionario recuperado
-        se convertirá a objetos de python (dict) que seran utilizados
-        para recuperar las instancias de clase BaseModel creadas
-        anteriormente, estan istancias serán almacendas en .__objects.
+        Esto lee un archivo en formato json, que se guardo
+        antes con el método .save(), el diccionario recuperado
+        se convertirá a objetos de python (dict) y serán utilizados
+        para recuperar las instancias de clase BaseModel
+        estas istancias serán almacendas en .__objects.
         """
         if path.exists(FileStorage.__file_path):
             with open(FileStorage.__file_path, 'r', encoding='utf-8') as f:
@@ -64,7 +64,7 @@ class FileStorage:
                 FileStorage.__objects[k] = bs
 
     def attributes(self):
-        """Returns the valid attributes and their types for classname"""
+        """Retorna la validacion de los atributos"""
         attributes = {
             "BaseModel":
                 {"id": str,
