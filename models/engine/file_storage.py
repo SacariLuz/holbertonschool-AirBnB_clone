@@ -1,32 +1,46 @@
 #!/usr/bin/python3
-"""Define una clase FileStorage"""
-
+"""
+Este módulo define la clase FileStorage.
+"""
 import json
 from os import path
 import datetime
 
 
 class FileStorage:
-    """Representa la clase FileStorage"""
+    """
+    La clase FileStorage se encargará se serializar y
+    deserealizar archivos para recuperar instancias de BaseModel.
+    """
     __file_path = "file.json"
     __objects = {}
 
     def all(self):
-        """Devuelve contenido a __objects
-        cuando se llama a una instancia de la clase"""
+        """
+        Retorna el contenido de .__objects.
+        Returns:
+            dict
+        """
         return FileStorage.__objects
 
     def new(self, obj):
-        """Este metodo toma obj como argumento y construye __objects
-        diccionario usando el nombre de la clase y el id"""
+        """
+        Este método almacena la instancias de clase,
+        recibidas en .__objects.
+        Args:
+            obj (object): Instacias a almacenar.
+        """
         key = f"{obj.__class__.__name__}.{obj.id}"
         FileStorage.__objects[key] = obj
 
     def save(self):
-        """El metodo guarda archivo un diccionario a __objects
-        en el archivo en formato json
         """
-         new_dict = {}
+        Este método guarda un diccionario retornado de las
+        instancias almacenadas en .__objects.
+        Return:
+            None
+        """
+        new_dict = {}
 
         for k, obj in FileStorage.__objects.items():
             new_dict[k] = obj.to_dict()
@@ -35,11 +49,11 @@ class FileStorage:
 
     def reload(self):
         """
-        Metodo que lee un archivo en formato .json, que se guardo
-        previamente con .save().
-        se convertirá a objetos de python (dict) y se utiliza
-        para recuperar las instancias de clase BaseModel que se crearon
-        anteriormente, estan istancias serán almacendas en .__objects
+        Este método lee un archivo en formato .json, que se guardo
+        previamente con el método .save(), el diccionario recuperado
+        se convertirá a objetos de python (dict) que seran utilizados
+        para recuperar las instancias de clase BaseModel creadas
+        anteriormente, estan istancias serán almacendas en .__objects.
         """
         if path.exists(FileStorage.__file_path):
             with open(FileStorage.__file_path, 'r', encoding='utf-8') as f:
@@ -50,22 +64,18 @@ class FileStorage:
                 FileStorage.__objects[k] = bs
 
     def attributes(self):
-        """
-        Devuelve los atributos válidos y sus tipos para el nombre de
-        clase
-        """
+        """Returns the valid attributes and their types for classname"""
         attributes = {
             "BaseModel":
                 {"id": str,
-                    "created_at": datetime.datetime,
-                    "updated_at": datetime.datetime},
+                 "created_at": datetime.datetime,
+                 "updated_at": datetime.datetime},
             "User":
                 {"email": str,
                  "password": str,
                  "first_name": str,
-                 "last_name": str},
-                },
-
+                 "last_name": str
+                 },
         }
 
         return attributes

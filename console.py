@@ -1,52 +1,64 @@
 #!/usr/bin/python3
-"""Definimos una clase llamada HBNBCommand"""
-
+"""
+Este módulo expone la clase
+HBNBCommand(cmd.Cmd)
+"""
 import cmd
 import re
 from shlex import split
 from models import storage
 from models.base_model import BaseModel
 
+"""
+Esta función analiza una cadena para buscar llaves o corchetes,
+divide la cadena y elimina las comas
+de los elementos para luego agregarlo al final de la lista resultante
+"""
+
+
+def parse(arg):
+    dot1 = re.search(r"\{(.*?)\}", arg)
+    dot2 = re.search(r"\[(.*?)\]", arg)
+    if dot1 is None:
+        if dot2 is None:
+            return [i.strip(",") for i in split(arg)]
+        else:
+            hbn = split(arg[:dot2.span()[0]])
+            retl = [i.strip(",") for i in hbn]
+            retl.append(dot2.group())
+            return retl
+    else:
+        hbn = split(arg[:dot1.span()[0]])
+        retl = [i.strip(",") for i in hbn]
+        retl.append(dot1.group())
+        return retl
+
 
 class HBNBCommand(cmd.Cmd):
+    """
+    Esta clase hereda de cmd.Cmd, desde aqui se gestionará
+    nuestro proyecto.
+    """
+    prompt = "(hbnb) "
 
-    prompt = "(hbnb)"
-    valid_classes = ["BaseModel"]
-
-
-
-    def emptyline(self):
-        """No haga nada al recibir una linea vacia"""
-        pass
 
     def do_quit(self, arg):
-        """Definimos un metodo do_quit y toma 2
-        argumentos y salir del interprete de comandos
-        """
+        """Quit command to exit the program\n"""
         return True
 
     def do_EOF(self, arg):
-        """
-        Definimos un metodo do_EOE y toma 2 argumentos
-        señal EOF para salir del programa
-        """
+        """EOF signal to exit the program"""
         print("")
         return True
 
-    def help_quit(self):
-        """Salir del interpete de comandos"""
-        print("Quit command to exit the program")
-
-    def help_EOF(self):
-        """Muestra la ayuda para el comando EOF"""
-        print("Salir del programa con EOF")
+    def emptyline(self):
+        pass
 
     def do_create(self, arg):
-        """Crea una nueva instancia de clase e imprime
-        el id
+        """Uso: create <class>
+        Crea una nueva instancia y muestra el id.
         """
-        argl = shelex.split(arg)
-
+        argl = parse(arg)
         if len(argl) == 0:
             print("** class name missing **")
         elif argl[0] not in HBNBCommand.__classes:
@@ -54,11 +66,12 @@ class HBNBCommand(cmd.Cmd):
         else:
             print(eval(argl[0])().id)
             storage.save()
-            print(new_instance.id)
 
     def do_show(self, arg):
-        """Muestra la representacion de una instancia"""
-        argl = shelex.split(arg)
+        """Usando: show <class> <id> or <class>.show(<id>)
+        Muestra la representación en string de la clase con su id
+        """
+        argl = parse(arg)
         objdict = storage.all()
         if len(argl) == 0:
             print("** class name missing **")
@@ -72,14 +85,13 @@ class HBNBCommand(cmd.Cmd):
             print(objdict["{}.{}".format(argl[0], argl[1])])
 
     def do_destroy(self, arg):
-        """Elimina una instancia de clase de una identificacion
-        determinada
-        """
-        argl = shelex.split(arg)
+        """Usage: destroy <class> <id> or <class>.destroy(<id>)
+        Delete a class instance of a given id."""
+        argl = parse(arg)
         objdict = storage.all()
         if len(argl) == 0:
             print("** class name missing **")
-        elif argl[0] not in HBNBCommand.__classes:
+        elif not argl[0] in HBNBCommand.__classes:
             print("** class doesn't exist **")
         elif len(argl) == 1:
             print("** instance id missing **")
@@ -90,11 +102,10 @@ class HBNBCommand(cmd.Cmd):
             storage.save()
 
     def do_all(self, arg):
-        """Muestra las representaciones de cadenas de todas las
-        instancias de una clase determinada.
-        Si no se especifica ninguna clase, muestra todos los objetos
-        """
-        argl = shelex.split(arg)
+        """Usage: all or all <class> or <class>.all()
+        Display string representations of all instances of a given class.
+        If no class is specified, displays all instantiated objects."""
+        argl = parse(arg)
         if len(argl) > 0 and argl[0] not in HBNBCommand.__classes:
             print("** class doesn't exist **")
         else:
@@ -106,22 +117,16 @@ class HBNBCommand(cmd.Cmd):
                     objl.append(obj.__str__())
             print(objl)
 
-    def do_count(self, arg):
-        """Recuperar el nro de instancias de una clase determinada"""
-        argl = parse(arg)
-        count = 0
-        for obj in storage.all().values():
-            if argl[0] == obj.__class__.__name__:
-                count += 1
-        print(count)
-
     def do_update(self, arg):
-        """Se actualiza una instancia de clase de una identificación
-        determinada agregando o actualizando un diccionario o
-        par valor de atributo determinado
-        """
-        argl = shelex.split(arg)
+        """Usando: update <class> <id> <attribute_name> <attribute_value> or
+       <class>.update(<id>, <attribute_name>, <attribute_value>) o
+       <class>.update(<id>, <dictionary>)
+        Actualiza la instancia de la clase de la id señalada añadiendo o
+        actualizando un determinado
+        par clave/valor de atributo o diccionario."""
+        argl = parse(arg)
         objdict = storage.all()
+
         if len(argl) == 0:
             print("** class name missing **")
             return False
@@ -161,6 +166,7 @@ class HBNBCommand(cmd.Cmd):
                 else:
                     obj.__dict__[k] = v
         storage.save()
+
 
 if __name__ == '__main__':
     HBNBCommand().cmdloop()
