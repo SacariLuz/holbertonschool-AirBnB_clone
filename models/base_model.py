@@ -2,7 +2,6 @@
 """
 Este módulo define la clase BaseModel
 """
-
 import uuid
 from datetime import datetime
 from models import storage
@@ -10,18 +9,18 @@ from models import storage
 
 class BaseModel:
     """
-    Este clase expone BaseModel, la que será nuestra superclase.
+    Este clase será BaseModel
     """
 
     def __init__(self, *args, **kwargs):
         """
-        Este método inicializa lo sgte:
+        Este método inicializa:
             id, created_at, updated_at
         Attr:
             id (str): Genera un id cada vez que se instancia.
-            created_ad (str): Genera la hora y fecha cada vez
+            created_ad (str): Da la hora y fecha cada vez
                     que se instancia un nuevo objeto.
-            updated_at (str): Genera y actualiza la hora y fecha,
+            updated_at (str): Muestra y actualiza hora y fecha,
                     cada vez que se cambia nuestra instancia.
         """
         if bool(kwargs):
@@ -40,20 +39,20 @@ class BaseModel:
             storage.new(self)
 
     def __str__(self):
-        """Returns a string in this format:
+        """Devuelve en este formato:
             BaseModel (uuid4 type id) self.__dict__
         """
         return f"[{self.__class__.__name__}] ({self.id}) "\
             + str({k: v for k, v in self.__dict__.items() if k != '__class__'})
 
     def save(self):
-        """Este método actualiza .updated_at"""
+        """Esto actualiza .updated_at"""
         self.updated_at = datetime.now()
         storage.save()
 
     def to_dict(self):
         """
-        Este método genera un nuevo diccionario agregando la clave __class__
+        Este método resulta un new diccionario agregando la clave __class__
         Returns:
             new_dict (dict)
         """
