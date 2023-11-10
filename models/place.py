@@ -5,6 +5,7 @@ Define la clase place
 
 from models.base_model import BaseModel
 
+
 class Place(BaseModel):
     """ Define nombre del lugar
 
