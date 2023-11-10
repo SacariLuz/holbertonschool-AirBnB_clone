@@ -71,7 +71,7 @@ class TestFileStorage(unittest.TestCase):
         self.assertTrue(os.path.exists(models.storage._FileStorage__file_path))
 
     def test_reload_empty_file(self):
-        with self.assetRaises(TypeError):
+        with self.assertRaises(TypeError):
             models.storage()
             models.storage.reload()
 
