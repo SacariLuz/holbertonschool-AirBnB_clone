@@ -5,6 +5,7 @@ import unittest
 import models
 from models.base_model import BaseModel
 from models.engine.file_storage import FileStorage
+from os import path
 
 
 class TestFileStorageInstatiation(unittest.TestCase):
