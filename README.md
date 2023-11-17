@@ -1,19 +1,19 @@
-#AirBnB The console
+# AirBnB The console
 
 ## Description of proyect
 We started with the AirBnB clone project.
 In this part the Back-end is shown and works, it is connected by the cmd in Python.
 The created objects will be saved and displayed in the JSON file in Python.
 
-##Description of interprete
+## Description of interprete
 As this is used specifically for the AirBnB page, it has a very marked interface, somewhat similar to the main command shell.
 
-###How to start
+### How to start
 En proceso...
-###Execution
+### Execution
 It carries out its execution in the following way:
 
-###Examples:
+### Examples:
     $ ./console.py
     (hbnb) help
     
